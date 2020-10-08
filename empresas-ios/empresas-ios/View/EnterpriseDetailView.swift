@@ -8,31 +8,54 @@
 import SwiftUI
 
 struct EnterpriseDetailView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+    var enterprise: Enterprise
+    var backgroundColor: Color
+
+    init(enterprise: Enterprise, backgroundColor: Color) {
+        UINavigationBar.appearance().barTintColor = .white
+        UINavigationBar.appearance().backgroundColor = .white
+        UINavigationBar.appearance().isOpaque = true
+
+        self.enterprise = enterprise
+        self.backgroundColor = backgroundColor
+    }
+
+    var btnBack : some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(systemName: "arrow.left")
+                    .foregroundColor(Color("pink"))
+            }
+            .padding(10)
+            .background(Color("grey"))
+            .cornerRadius(4)
+        }
+    }
+
     var body: some View {
         ScrollView() {
-            VStack {
-                Image("logo_home")
-                Text("Nome da empresa")
-                    .font(.title)
-                    .foregroundColor(.white)
-                    .fontWeight(.bold)
-            }
-            .frame(width: UIScreen.main.bounds.width, height: 120, alignment: .center)
-            .background(Color.blue)
+            EnterpriseCardView(enterprise: enterprise, backgroundColor: backgroundColor)
 
             Spacer()
 
-            Text("""
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-""")
+            Text(enterprise.description!)
+                .font(.body)
+                .fontWeight(.light)
+                .padding()
         }
-    }
-}
-
-struct CompanyDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        EnterpriseDetailView()
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(leading: btnBack)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                HStack {
+                    Text(enterprise.enterprise_name!).font(.headline)
+                }
+            }
+        }
     }
 }
